@@ -29,8 +29,8 @@ app = Flask(__name__)
 cors=CORS(app)
 
 
-GOOGLE_API_KEY = 'AIzaSyChR4UKKnJC1ASETC16uh0dBUK-wYtZBaI'
-GOOGLE_CSE_ID = '1170d27ec87dd4a5d'
+GOOGLE_API_KEY = ''
+GOOGLE_CSE_ID = ''
 
 SECRET_KEY = "1234" 
 
@@ -47,7 +47,7 @@ OPENFDA_BASE_URL = "https://api.fda.gov/drug/label.json"
 pytesseract.pytesseract.tesseract_cmd = r'D:\PP12\tessocr\tesseract.exe'
 
 # Configure Google Gemini API
-genai.configure(api_key="AIzaSyC1Ka0nxtqdnOglV3QUGwh0Hxat9H3WwKc")
+genai.configure(api_key="")
 
 # Configure upload folder and file size limits
 UPLOAD_FOLDER = "./uploads"
