@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Cart - Pharmacy Cure Connect</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to right, #121212, #1e1e1e, #333333);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .header {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .logo {
+      font-size: 32px;
+      font-weight: bold;
+      color: #00bfff;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .header-buttons {
+      display: flex;
+      gap: 20px;
+    }
+
+    .header-buttons a {
+      text-decoration: none;
+      background-color: royalblue;
+      padding: 14px 20px;
+      border-radius: 15px;
+      color: #fff;
+      font-size: 15px;
+    }
+
+    .cart-table-container {
+      width: 100%;
+      max-width: 1200px;
+      margin-top: 30px;
+      background-color: #1a1a1a;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    th, td {
+      padding: 12px;
+      text-align: center;
+      /* Remove border property to hide the borders */
+      border: none;
+    }
+    th {
+      background-color: #333;
+      color: #fff;
+    }
+
+    .quantity-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .quantity-controls button {
+      background-color: gainsboro; /* Make the button background transparent */
+      border: none; /* Remove borders */
+      color:  black; /* Make the text color white for the + and - symbols */
+      padding: 5px 10px;
+      cursor: pointer;
+      font-size: 13px; /* Adjust the size of the symbols */
+      margin: 0 5px;
+      border-radius: 30px;
+    }
+
+    .delete-btn {
+      background-color: red;
+      border: none;
+      color: white;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 20px;
+      font-size: 14px;
+    }
+
+    .total-price {
+      margin-top: 20px;
+      font-size: 24px;
+      color: royalblue;
+      text-align: right;
+    }
+
+    .checkout-button {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background-color: royalblue;
+      padding: 15px 30px;
+      border-radius: 15px;
+      color: #fff;
+      font-size: 18px;
+    }
+
+    .add-products-button {
+      background-color: green;
+      padding: 8px 15px;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s, box-shadow 0.3s ease;
+      text-align: center;
+      width: auto;
+      margin-top: 20px;
+      display: inline-block;
+    }
+
+    .add-products-button:hover {
+      background-color: darkgreen;
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .add-products-button i {
+      margin-right: 5px;
+    }
+
+    .checkout-button:hover {
+      background-color: darkblue;
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">Cure Connect Pharmacy</div>
+    <div class="header-buttons">
+      <a href="Z:\OVERALLLLL\pharmacy.html"><i class="fas fa-home"></i> Back to Pharmacy</a>
+      <a href="checkout.html"><i class="fas fa-shopping-cart"></i> Cart</a>
+      <a href="Z:\OVERALLLLL\pvs_currentorders.html"><i class="fas fa-user"></i> Your Orders</a>
+    </div>
+  </div>
+
+  <div class="cart-table-container">
+    <h2>Your Cart</h2>
+    <table id="cart-table">
+      <thead>
+        <tr>
+          <th>Sl No.</th>
+          <th>Product Name</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Dynamically populated cart items will go here -->
+      </tbody>
+    </table>
+    <div class="total-price" id="total-price">
+      Total Price: ₹0
+    </div>
+  </div>
+  <button class="add-products-button" id="add-products-btn">
+    <i class="fas fa-plus"></i> Add Products
+  </button>
+  <button class="checkout-button" id="checkout-btn" onclick="window.location.href='Z:/OVERALLLLL/checkout.html';">Checkout</button>
+
+  <script>
+    document.getElementById('add-products-btn').addEventListener('click', () => {
+      window.location.href = 'Z:/OVERALLLLL/pharmacy.html'; // Redirect to the pharmacy page
+    });
+
+    const jwtToken = localStorage.getItem("jwtToken");
+    console.log("USER ID SPECIFIC JWT TOKEN FROM CART PAGE", jwtToken); // Example user ID
+
+    fetch('http://127.0.0.1:5000/boot/retrievecart', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json',
+      "Authorization": `Bearer ${jwtToken}` },
+    })
+    .then(response => response.json())
+    .then(data => {
+      const cartTableBody = document.querySelector('#cart-table tbody');
+      let totalPrice = 0;
+      let f = 0;
+
+      if (data.cart_data) {
+        data.cart_data.forEach(item => {
+          totalPrice += item.quantity * item.price;
+          const row = document.createElement('tr');
+          f++;
+
+          row.innerHTML = `
+            <td>${f}</td>
+            <td>${item.name}</td>
+            <td class="quantity-controls">
+              <button class="plus-btn">+</button>
+              <span>${item.quantity}</span>       
+              <button class="minus-btn">-</button>
+            </td>
+            <td>₹${item.price}</td>
+            <td><button class="delete-btn">Delete</button></td>
+          `;
+          cartTableBody.appendChild(row);
+        });
+
+        // Display the total price
+        document.querySelector('#total-price').textContent = `Total Price: ₹${totalPrice.toFixed(2)}`;
+      }
+
+      // Event listeners for buttons
+      cartTableBody.addEventListener('click', event => {
+        const row = event.target.closest('tr');
+        const quantitySpan = row.querySelector('.quantity-controls span');
+        const name = row.cells[1].textContent; // Product Name
+        let quantity = parseInt(quantitySpan.textContent, 10);
+        const price = parseFloat(row.cells[3].textContent.replace('₹', ''));
+        let deleted = false;
+
+        if (event.target.classList.contains('plus-btn')) {
+          quantity++;
+        } else if (event.target.classList.contains('minus-btn')) {
+          quantity--;
+          if (quantity <= 0) {
+            row.remove();
+            deleted = true;
+          }
+        } else if (event.target.classList.contains('delete-btn')) {
+          row.remove();
+          deleted = true;
+        }
+
+        if (quantity > 0) {
+          quantitySpan.textContent = quantity;
+        } else {
+          deleted = true;
+        }
+
+        // Update the total price in the frontend immediately
+        updateTotalPrice();
+
+        // Optionally, send updated cart data to the backend
+        updateCartData(name, quantity, price, deleted);
+      });
+    });
+
+    function updateTotalPrice() {
+      const cartItems = document.querySelectorAll('#cart-table tbody tr');
+      let totalPrice = 0;
+
+      cartItems.forEach(row => {
+        const quantity = parseInt(row.querySelector('.quantity-controls span').textContent, 10);
+        const price = parseFloat(row.cells[3].textContent.replace('₹', ''));
+        totalPrice += quantity * price;
+      });
+
+      document.querySelector('#total-price').textContent = `Total Price: ₹${totalPrice.toFixed(2)}`;
+    }
+
+    function updateCartData(name, quantity, price, deleted) {
+      const token = localStorage.getItem("jwt_token"); // Assuming JWT token is stored in localStorage
+
+      fetch("http://127.0.0.1:5000/boot/updatecart", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${jwtToken}` // Include JWT token for verification
+          },
+          body: JSON.stringify({
+              name: name,
+              quantity: quantity,
+              deleted: deleted
+          })
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.status === "success") {
+              console.log("Cart updated successfully:", data);
+          } else {
+              console.error("Error updating cart:", data.message);
+          }
+      })
+      .catch(error => {
+          console.error("Request failed:", error);
+      });
+    }
+  </script>
+</body>
+</html>

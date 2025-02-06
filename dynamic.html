@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medicine Details</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-width: 800px;
+      width: 100%;
+      padding: 60px;
+      border-radius: 20px;
+      position: relative;
+      background-color: #1a1a1a;
+      color: #fff;
+      border: 1px solid #333;
+      text-align: center;
+      align-items: center;
+    }
+
+    .back-button, .checkout-button {
+      border: none;
+      outline: none;
+      padding: 8px 15px; /* Reduced padding */
+      border-radius: 8px; /* Reduced border radius */
+      color: #fff;
+      font-size: 14px; /* Reduced font size */
+      transform: .3s ease;
+      background-color: #00bfff;
+      cursor: pointer;
+      margin-top: 10px; /* Adjusted margin */
+      width: auto; /* Make the width fit the text */
+      max-width: 180px; /* Limit the max width */
+      text-align: center;
+    }
+
+    .back-button:hover, .checkout-button:hover {
+      background-color: #00bfff96;
+    }
+
+    .medicine-details {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .image-container {
+      flex: 1;
+      max-width: 280px;
+    }
+
+    .image-container img {
+      width: 100%;
+      aspect-ratio: 7 / 5;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid #ddd;
+    }
+
+    .details-container {
+      flex: 2;
+      text-align: left;
+    }
+
+    .details-container h1 {
+      font-size: 24px;
+      color: #00bfff;
+    }
+
+    .details-container p {
+      font-size: 16px;
+      margin: 8px 0;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .details-container strong {
+      color: #00bfff;
+    }
+
+    .add-to-cart, .quantity-button {
+      border: none;
+      outline: none;
+      padding: 10px;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 16px;
+      transform: .3s ease;
+      background-color: #00bfff;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    .add-to-cart:hover, .quantity-button:hover {
+      background-color: #00bfff96;
+    }
+
+   /* Spinner */
+   .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid #00bfff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Loading Spinner */
+  .loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: none; /* Initially hidden */
+  }
+
+  .loading-spinner p {
+    color: #fff;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Back Button -->
+  <button onclick="goBack()" class="back-button">← Back to Pharmacy</button>
+  <!-- Checkout Button -->
+  <button onclick="goToCheckout()" class="checkout-button">Checkout</button>
+
+  <!-- Medicine Details -->
+  <div class="medicine-details">
+    <div class="image-container">
+      <img id="medicine-image" src="default-image.png" alt="Medicine Image">
+    </div>
+    <div class="details-container">
+      <h1 id="product-name">Product Name</h1>
+      <p><strong>Brand:</strong> <span id="brand-name">Brand Name</span></p>
+      <p><strong>Manufacturer:</strong> <span id="manufacturer-name">Manufacturer Name</span></p>
+      <p><strong>Description:</strong> <span id="description">Description details</span></p>
+      <p><strong>Warnings & Precautions:</strong> <span id="warnings">Warnings details</span></p>
+      <p><strong>Storage:</strong> <span id="storage">Storage details</span></p>
+
+      <!-- Add to Cart Button -->
+      <button id="add-to-cart" class="add-to-cart">Add to Cart</button>
+      <!-- Quantity Button -->
+      <button id="quantity-button" class="quantity-button" onclick="adjustQuantity('increase')">+ Quantity</button>
+    </div>
+  </div>
+
+  <!-- Loading Spinner (Shows when data is loading) -->
+  <div id="loading-spinner" class="loading-spinner">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+  </div>
+</div>
+
+<script>
+  // Back button functionality
+  function goBack() {
+    window.location.href = "pharmacy.html"; // Redirect to the pharmacy page
+  }
+
+  // Redirect to Checkout Page
+  function goToCheckout() {
+    window.location.href = "checkout.html"; // Redirect to checkout page
+  }
+
+  // Fetch and display data (dynamic content)
+  async function loadMedicineDetails() {
+    const boom = sessionStorage.getItem("brand_name");
+    document.getElementById('loading-spinner').style.display = 'flex'; // Show the spinner
+    console.log("spinner should be there");
+    try {
+      const response = await fetch('http://127.0.0.1:5000/boot/dynamicpage', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ brand_name: boom }) // Sending brand name as JSON
+      });
+
+      const data = await response.json();
+
+      // Hide loading spinner once data is received
+      document.getElementById('loading-spinner').style.display = 'none';
+
+      if (data) {
+        // Populate data on the page
+        document.getElementById('medicine-image').src = data.image_url || "default-image.png";
+        document.getElementById('product-name').textContent = boom || "Unknown Product";
+        document.getElementById('brand-name').textContent = data.brand_name || "Unknown Brand";
+        document.getElementById('manufacturer-name').textContent = data.manufacturer || "Unknown Manufacturer";
+        document.getElementById('description').innerHTML = data.description || "No description available";
+        document.getElementById('warnings').innerHTML = data.warnings || "No warnings available"; // Use innerHTML here
+        document.getElementById('storage').innerHTML = data.storage || "No storage info available";
+      } else {
+        // If data is empty or invalid, display a message
+        document.getElementById('medicine-image').src = "default-image.png";
+        document.getElementById('product-name').textContent = "Product not found";
+        document.getElementById('brand-name').textContent = "";
+        document.getElementById('manufacturer-name').textContent = "";
+        document.getElementById('description').innerHTML = "No details available.";
+        document.getElementById('warnings').innerHTML = "No warnings available.";
+        document.getElementById('storage').innerHTML = "No storage information available.";
+      }
+    } catch (error) {
+      console.error("Error loading medicine details:", error);
+      document.getElementById('loading-spinner').style.display = 'none';
+      alert('Error loading medicine details. Please try again.');
+    }
+  }
+    // Call function on page load
+    document.addEventListener('DOMContentLoaded', loadMedicineDetails);
+
+    // Adjust quantity and send to the addToCart function
+    let quantity = 1;
+    function adjustQuantity(action) {
+      if (action === 'increase') {
+        quantity++;
+      } else if (action === 'decrease' && quantity > 1) {
+        quantity--;
+      }
+      // Update quantity display (optional)
+      document.getElementById('quantity-button').textContent = `${quantity} Quantity`;
+    }
+
+    // Add to Cart functionality
+    function addToCart(productName, productPrice, quantity) {
+      const jwtToken = localStorage.getItem("jwtToken");
+
+      console.log("USER ID SPECIFIC JWT TOKEN FROM PHARMACY PAGE", jwtToken);
+
+      const cartData = {
+        name: productName,
+        price: productPrice,
+        quantity: quantity
+      };
+
+      // Send POST request to the backend
+      fetch('http://127.0.0.1:5000/boot/addcart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization": `Bearer ${jwtToken}` // Pass the JWT token
+        },
+        body: JSON.stringify(cartData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        alert(data.message + ' Total Price: ' + data.total_price);
+      })
+      .catch(error => {
+        alert('Error: ' + error.message);
+      });
+    }
+
+    // Event listener for Add to Cart button
+    document.getElementById('add-to-cart').addEventListener('click', () => {
+      const productName = document.getElementById('product-name').textContent;
+      const productPrice11 = sessionStorage.getItem("product_price"); 
+      if (productPrice11 > 0)
+      {
+        product_final_Price = productPrice11;
+        console.log("wdwdd",product_final_Price)
+      }
+      else{
+        product_final_Price = 10; 
+      }// Assuming a price for now; you can replace with dynamic value
+      addToCart(productName, product_final_Price, quantity);
+    });
+  </script>
+</body>
+</html>

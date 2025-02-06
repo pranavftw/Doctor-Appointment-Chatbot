@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      font-family: Arial, sans-serif;
+    }
+
+ 
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 400px;
+  width: 100%;
+  padding: 60px;
+  border-radius: 20px;
+  position: relative;
+  background-color: #1a1a1a;
+  color: #fff;
+  border: 1px solid #333;
+}
+
+.title {
+  font-size: 50px;
+  font-weight: 600;
+  letter-spacing: -1px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-left: 30px;
+  padding-right: 50px;
+  color: #00bfff;
+}
+
+.title::before {
+  width: 18px;
+  height: 18px;
+}
+
+.title::after {
+  width: 18px;
+  height: 18px;
+  animation: pulse 1s linear infinite;
+}
+
+.title::before,
+.title::after {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  left: 0px;
+  background-color: #00bfff;
+}
+
+.message, 
+.signin {
+  font-size: 14.5px;
+  color: rgba(255, 255, 255, 0.7);
+  
+}
+
+.signin {
+  text-align: center;
+}
+
+.signin a:hover {
+  text-decoration: underline royalblue;
+  
+}
+
+.signin a {
+  color: #00bfff;
+  
+}
+
+.flex {
+  display: flex;
+  width: 100%;
+  gap: 6px;
+}
+
+.form label {
+  position: relative;
+}
+
+.form label .input {
+  background-color: #333;
+  color: #fff;
+  width: 100%;
+  padding: 20px 05px 05px 10px;
+  outline: 0;
+  border: 1px solid rgba(105, 105, 105, 0.397);
+  border-radius: 10px;
+}
+
+.form label .input + span {
+  color: rgba(255, 255, 255, 0.5);
+  position: absolute;
+  left: 10px;
+  top: 0px;
+  font-size: 0.9em;
+  cursor: text;
+  transition: 0.3s ease;
+}
+
+.form label .input:placeholder-shown + span {
+  top: 12.5px;
+  font-size: 0.9em;
+}
+
+.form label .input:focus + span,
+.form label .input:valid + span {
+  color: #00bfff;
+  top: 0px;
+  font-size: 0.7em;
+  font-weight: 600;
+}
+
+.input {
+  font-size: medium;
+}
+
+.submit {
+  border: none;
+  outline: none;
+  padding: 10px;
+  width: 415px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 16px;
+  transform: .3s ease;
+  background-color: #00bfff;
+}
+
+.submit:hover {
+  background-color: #00bfff96;
+}
+.success {
+  color: green;
+  
+}
+.error {
+  color: red;
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(2);
+    opacity: 1;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+  </style>
+</head>
+<body> 
+<div class="form-container">  
+<form class="form" id="signin-form">
+  <p class="title">Sign In</p>
+  <p class="message">Welcome back! Please sign in.</p>
+
+  <label>
+    <input class="input" id="signin-name" type="text" placeholder="" required="">
+    <span>Name</span>
+  </label> 
+
+  <label>
+    <input class="input" id="signin-password" type="password" placeholder="" required="">
+    <span>Password</span>
+  </label>
+
+  <button type="button" class="submit" id="signin-btn">Sign In</button>
+  <p class="signin">Don't have an account? <a href="Z:\OVERALLLLL\firstpagelogin.html">Sign up</a></p>
+  <div id="responsemessg" class="message"></div>
+</form>
+
+</div>
+
+<script>
+    const API_URL = "http://127.0.0.1:5000/boot/signin"; // Update this to match your API endpoint
+
+    document.getElementById("signin-btn").addEventListener("click", () => {
+        const name = document.getElementById("signin-name").value.trim();
+        const password = document.getElementById("signin-password").value.trim();
+        const responseMessage = document.createElement("p");
+        const responsemessg = document.getElementById("responsemessg");
+
+        if (!name || !password) {
+            alert("All fields are required!");
+            responsemessg.textContent = "All fields are required!";
+            responsemessg.classList.add("error");
+            return;
+        }
+        console.log(name);
+        fetch(API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ name, password })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert(data.error);
+                responsemessg.textContent = data.error;
+                responsemessg.classList.add("error");
+                responsemessg.classList.remove("success");
+
+            } else {
+                alert("Sign In Successful!");
+                responsemessg.textContent = "Sign In successful";
+                responsemessg.classList.remove("error");
+                responsemessg.classList.add("success");
+                if (data.TOKEN) {
+                    localStorage.setItem("jwtToken", data.TOKEN);
+                }
+                responsemessg.textContent = "Redirecting to chatbot";
+                setTimeout(() => {
+                    window.location.href = "Z:/OVERALLLLL/chatbot.html";  // HOME PAGE WITH BUTTONS ************************ LINK THIS 
+                }, 2000);
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("An error occurred. Please try again");
+            responsemessg.textContent = "An error occurred. Please try again with correct credentials";
+            responsemessg.classList.add("error");
+          
+        });
+    });
+</script>
+</body>
+</html>

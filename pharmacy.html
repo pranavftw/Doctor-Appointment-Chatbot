@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pharmacy Cure Connect</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+        margin: 0;
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(135deg, #6a11cb, #2575fc);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        transition: background 0.5s ease;
+    }
+
+    .header {
+        width: 100%;
+        max-width: 1200px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    .logo {
+        font-size: 32px;
+        font-weight: bold;
+        color: #00bfff;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    .logo:hover {
+        transform: scale(1.1);
+        color: #ff6347;
+    }
+
+    .header-buttons {
+        display: flex;
+        gap: 20px;
+    }
+
+    .header-buttons a {
+        text-decoration: none;
+        background-color: royalblue;
+        border: none;
+        padding: 14px 20px;
+        border-radius: 15px;
+        color: #fff;
+        font-size: 15px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s, box-shadow 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .header-buttons a:hover {
+        background-color: rgb(56, 90, 194);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .search-bar-container {
+        width: 100%;
+        max-width: 900px;
+        margin: 30px 0;
+        display: flex;
+        justify-content: center;
+        animation: slideIn 1s ease;
+    }
+
+    .search-bar {
+        display: flex;
+        flex: 1;
+        max-width: 700px;
+        background-color: #1a1a1a;
+        border-radius: 25px;
+        box-shadow: 0 5px 15px rgba(0, 191, 255, 0.3);
+        transition: box-shadow 0.3s ease;
+    }
+
+    .search-bar input {
+        flex: 1;
+        padding: 15px;
+        border: none;
+        border-radius: 25px 0 0 25px;
+        outline: none;
+        font-size: 16px;
+        background-color: transparent;
+        color: #fff;
+        transition: box-shadow 0.3s ease;
+    }
+
+    .search-bar input:focus {
+        box-shadow: 0 5px 20px rgba(0, 191, 255, 0.7);
+    }
+
+    .search-bar button {
+        background-color: royalblue;
+        border: none;
+        padding: 15px 25px;
+        border-radius: 0 25px 25px 0;
+        color: #fff;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease, transform 0.2s, box-shadow 0.3s ease;
+    }
+
+    .search-bar button:hover {
+        background-color: rgb(56, 90, 194);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .medicine-list {
+        width: 100%;
+        max-width: 1200px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* 3 columns */
+        gap: 30px;
+        margin-top: 30px;
+        animation: fadeInUp 1s ease-in-out;
+    }
+
+    .medicine-card {
+      background-color: #1a1a1a;
+      color: #fff;
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s ease, background-color 0.3s ease;
+  }
+  
+  .medicine-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+      background-color: #222222;
+  }
+  
+  .medicine-card img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      margin-bottom: 20px;
+      border-radius: 50%;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .medicine-card img:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 20px rgba(0, 191, 255, 0.3);
+  }
+  
+  .medicine-card h3 {
+      font-size: 24px;
+      margin: 10px 0;
+      color: #00bfff;
+      text-transform: capitalize;
+      transition: color 0.3s ease;
+  }
+  
+  .medicine-card h3:hover {
+      color: #ff6347;
+  }
+  
+  .medicine-card p {
+      font-size: 20px;
+      font-weight: bold;
+      color: royalblue;
+      margin-bottom: 25px;
+      transition: color 0.3s ease;
+  }
+  
+  .medicine-card p:hover {
+      color: #ff6347;
+  }
+  
+  .medicine-card select {
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 15px;
+      background-color: #1a1a1a;
+      color: #fff;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .medicine-card select:focus {
+      border-color: #00bfff;
+      box-shadow: 0 0 8px rgba(0, 191, 255, 0.5);
+  }
+  
+  /* Updated button styles */
+  .medicine-card a {
+      text-decoration: none;
+      background-color: royalblue;
+      color: #fff;
+      padding: 12px 26px;
+      border-radius: 15px;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background-color 0.3s ease, transform 0.2s, box-shadow 0.3s ease;
+      width: 100%;
+      justify-content: center;
+      margin-bottom: 10px; /* Adds space between buttons */
+  }
+  
+  /* Ensures last button does not have extra margin */
+  .medicine-card a:last-child {
+      margin-bottom: 0;
+  }
+  
+  .medicine-card a:hover {
+      background-color: rgb(56, 90, 194);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Results Container */
+  .results-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+      background-color: #121212;
+      padding: 0%;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 1s ease-in-out;
+  }
+  
+  .result-box {
+      padding: 15px;
+      background-color: #1a1a1a;
+      color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      font-size: 16px;
+      margin-bottom: 10px;
+      transition: transform 0.3s, box-shadow 0.3s ease;
+  }
+  
+  .result-box:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  .result-box a {
+      color: #00bfff;
+      text-decoration: none;
+      font-size: 16px;
+      display: inline-block;
+      margin-top: 10px;
+      transition: color 0.3s ease;
+  }
+  
+  .result-box a:hover {
+      color: #ff6347;
+  }
+  
+  /* Animations */
+  @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-50%); }
+      to { opacity: 1; transform: translateX(0); }
+  }
+  
+  @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+  }
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid #00bfff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-spinner p {
+    color: #fff;
+    margin-top: 10px;
+    font-size: 14px;
+}.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #00bfff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
+}
+
+.loading-spinner p {
+  color: #fff;
+  margin-top: 10px;
+  font-size: 14px;
+}
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">Cure Connect Pharma Store</div>
+    <div class="header-buttons">
+      <a href="Z:\OVERALLLLL\chatbot.html"><i class="fas fa-user"></i> Go back to Chatbot</a>
+      <a href="Z:/OVERALLLLL/viewcart.html"><i class="fas fa-shopping-cart"></i> Cart</a>
+      <a href="Z:/OVERALLLLL/checkout.html"><i class="fas fa-user"></i> Checkout</a>
+      <a href="Z:\OVERALLLLL\pvs_currentorders.html"><i class="fas fa-user"></i> Your Orders</a>
+    </div>
+  </div>
+  
+  <ul id="search-results" style="list-style-type: none; padding: 0; margin-top: 20px; width: 100%; max-width: 700px;"></ul>
+  <div class="search-bar-container">
+    <div class="search-bar">
+      <input type="text" id="dynamic-search" placeholder="Search for medicines..." />
+      <button><i class="fas fa-search"></i> Search</button>
+      
+    </div>
+  </div>
+  
+  <div id="search-results-container" class="results-container">
+   
+      
+    
+  
+    <!-- Results will be dynamically inserted here -->
+  </div>
+
+  <div class="medicine-list">
+    <!-- 9 Medicine Cards -->
+    <div class="medicine-card">
+      <img src="Z:\OVERALLLLL\pharmacy_pics\Paracetamol.png" alt="Medicine 1" />
+      <h3>Paracetamol</h3>
+      <p>₹20</p>
+      <select class="medicine-quantity" data-name="Paracetamol" data-price="20">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+      <a href="javascript:void(0)" class="add-to-cart"><i class="fas fa-cart-plus"></i> Add to Cart</a>
+      <a href="javascript:void(0)" class="see-more-details"><i class="fas fa-info-circle"></i> See More Details</a>
+    </div>
+
+    <div class="medicine-card">
+      <img src="Z:\OVERALLLLL\pharmacy_pics\Ibu.png" alt="Medicine 2" />
+      <h3>Ibuprofen</h3>
+      <p>₹40</p>
+      <select class="medicine-quantity" data-name="Ibuprofen" data-price="40">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+      <a href="javascript:void(0)" class="add-to-cart"><i class="fas fa-cart-plus"></i> Add to Cart</a>
+      <a href="javascript:void(0)" class="see-more-details"><i class="fas fa-info-circle"></i> See More Details</a>
+    </div>
+
+    <div class="medicine-card">
+      <img src="Z:\OVERALLLLL\pharmacy_pics\Amox.png" alt="Medicine 3" />
+      <h3>Amoxicillin</h3>
+      <p>₹60</p>
+      <select class="medicine-quantity" data-name="Amoxicillin" data-price="60">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+      <a href="javascript:void(0)" class="add-to-cart"><i class="fas fa-cart-plus"></i> Add to Cart</a>
+      <a href="javascript:void(0)" class="see-more-details"><i class="fas fa-info-circle"></i> See More Details</a>
+    </div>
+    
+    <div class="medicine-card">
+      <img src="Z:\OVERALLLLL\pharmacy_pics\Cetirizine.png" alt="Medicine 4" />
+      <h3>Cetirizine</h3>
+      <p>₹30</p>
+      <select class="medicine-quantity" data-name="Cetirizine" data-price="30">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+      <a href="javascript:void(0)" class="add-to-cart"><i class="fas fa-cart-plus"></i> Add to Cart</a>
+      <a href="javascript:void(0)" class="see-more-details"><i class="fas fa-info-circle"></i> See More Details</a>
+    </div>
+
+    <div class="medicine-card">
+      <img src="Z:\OVERALLLLL\pharmacy_pics\Omeprazole.png" alt="Medicine 5" />
+      <h3>Omeprazole</h3>
+      <p>₹50</p>
+      <select class="medicine-quantity" data-name="Omeprazole" data-price="50">
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+  </select>
+  <a href="javascript:void(0)" class="add-to-cart"><i class="fas fa-cart-plus"></i> Add to Cart</a>
+  <a href="javascript:void(0)" class="see-more-details"><i class="fas fa-info-circle"></i> See More Details</a>
+</div>
+  
+    <div class="medicine-card">
+      <img src="Z:\OVERALLLLL\pharmacy_pics\Metformin.png" alt="Medicine 6" />
+      <h3>Metformin</h3>
+      <p>₹25</p>
+      <select class="medicine-quantity" data-name="Metformin" data-price="25">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+      <a href="javascript:void(0)" class="add-to-cart"><i class="fas fa-cart-plus"></i> Add to Cart</a>
+      <a href="javascript:void(0)" class="see-more-details"><i class="fas fa-info-circle"></i> See More Details</a>
+    </div>
+
+    <div class="medicine-card">
+      <img src="Z:\OVERALLLLL\pharmacy_pics\Atorvastatin.png" alt="Medicine 7" />
+      <h3>Atorvastatin</h3>
+      <p>₹80</p>
+      <select class="medicine-quantity" data-name="Atorvastatin" data-price="80">
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+  </select>
+  <a href="javascript:void(0)" class="add-to-cart"><i class="fas fa-cart-plus"></i> Add to Cart</a>
+  <a href="javascript:void(0)" class="see-more-details"><i class="fas fa-info-circle"></i> See More Details</a>
+</div> 
+
+    <div class="medicine-card">
+      <img src="Z:\OVERALLLLL\pharmacy_pics\Diclofenac.png" alt="Medicine 8" />
+      <h3>Diclofenac</h3>
+      <p>₹35</p>
+      <select class="medicine-quantity" data-name="Diclofenac" data-price="35">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+      <a href="javascript:void(0)" class="add-to-cart"><i class="fas fa-cart-plus"></i> Add to Cart</a>
+      <a href="javascript:void(0)" class="see-more-details"><i class="fas fa-info-circle"></i> See More Details</a>
+    </div>
+
+    <div class="medicine-card">
+      <img src="Z:\OVERALLLLL\pharmacy_pics\Loratadine.png" alt="Medicine 9" />
+      <h3>Loratadine</h3>
+      <p>₹40</p>
+      <select class="medicine-quantity" data-name="Loratadine" data-price="40">
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+  </select>
+  <a href="javascript:void(0)" class="add-to-cart"><i class="fas fa-cart-plus"></i> Add to Cart</a>
+  <a href="javascript:void(0)" class="see-more-details"><i class="fas fa-info-circle"></i> See More Details</a>
+</div>
+      <script>
+        // Add event listeners to all "See More Details" buttons
+        document.querySelectorAll('.see-more-details').forEach(button => {
+          button.addEventListener('click', function () {
+          // Find the parent div (the medicine item)
+            const medicineDiv = this.closest('.medicine-item');
+      
+      // Get the medicine name (using the h3 tag inside the parent div)
+           // const medicineName = medicineDiv.querySelector('h3').innerText;
+           const card = this.closest('.medicine-card'); 
+           const medicineName = card.querySelector('.medicine-quantity').getAttribute('data-name');
+           const productPrice11 = card.querySelector('.medicine-quantity').getAttribute('data-price');
+      // Store the medicine name,product price if selected from pharma page in sessionStorage
+            sessionStorage.setItem('brand_name', medicineName);
+            sessionStorage.setItem('product_price', productPrice11);
+      
+      // Redirect to the dynamic page
+            window.location.href = 'dynamic.html';
+      });
+    });
+
+        // Event Listener for Add to Cart buttons
+        document.querySelectorAll('.add-to-cart').forEach(button => {
+          button.addEventListener('click', function() {
+            const card = this.closest('.medicine-card');
+            const productName = card.querySelector('.medicine-quantity').getAttribute('data-name');
+            const productPrice = card.querySelector('.medicine-quantity').getAttribute('data-price');
+            const quantity = card.querySelector('.medicine-quantity').value;
+            const jwtToken = localStorage.getItem("jwtToken");
+            console.log("USER ID SPECIFIC JWT TOKEN FROM PHARMACY PAGE",jwtToken);
+            const cartData = {
+              name: productName,
+              price: productPrice,
+              quantity: quantity
+            };
+    
+            // Send POST request to the backend
+            fetch('http://127.0.0.1:5000/boot/addcart', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${jwtToken}` // Pass the JWT token
+              },
+              body: JSON.stringify(cartData)
+            })
+            .then(response => response.json())
+            .then(data => {
+              alert(data.message + ' Total Price: ' + data.total_price);
+            })
+            .catch(error => {
+              alert('Error: ' + error.message);
+            });
+          });
+        });
+        
+      // Function to handle adding items to the cart
+function addToCart(productName, productPrice, quantity) {
+  const jwtToken = localStorage.getItem("jwtToken");
+
+  console.log("USER ID SPECIFIC JWT TOKEN FROM PHARMACY PAGE", jwtToken);
+
+  const cartData = {
+    name: productName,
+    price: productPrice,
+    quantity: quantity
+  };
+
+  // Send POST request to the backend
+  fetch('http://127.0.0.1:5000/boot/addcart', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      "Authorization": `Bearer ${jwtToken}` // Pass the JWT token
+    },
+    body: JSON.stringify(cartData)
+  })
+  .then(response => response.json())
+  .then(data => {
+    alert(data.message + ' Total Price: ' + data.total_price);
+  })
+  .catch(error => {
+    alert('Error: ' + error.message);
+  });
+}
+
+// Update the search results logic to link the "Add to Cart" functionality
+const searchInput = document.getElementById('dynamic-search');
+const searchResultsContainer = document.getElementById('search-results-container');
+const loadingSpinner = document.getElementById("loading-spinner");
+
+searchInput.addEventListener('input', function () {
+  const query = this.value;
+
+  if (query.length > 2) { // Fetch results only if query is longer than 2 characters
+    fetch('http://127.0.0.1:5000/boot/search', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query }),
+    })
+    .then(response => response.json())
+    .then(data => {
+     
+      // Clear the current results
+      searchResultsContainer.innerHTML = '';
+
+      if (data.medicines && Array.isArray(data.medicines)) {
+        // Populate with new results
+        data.medicines.forEach(item => {
+          const resultBox = document.createElement('div');
+          resultBox.classList.add('result-box');
+
+          resultBox.innerHTML = `
+            <h3>${item.brand_name}</h3>
+            <p><strong>Key ingredients:</strong> ${item.product_name}</p>
+            <p><strong>Manufacturer:</strong> ${item.manufacturer_name}</p>
+            <a href="javascript:void(0)" class="add-to-cart-link" data-name="${item.brand_name}" data-price="50">
+              <i class="fas fa-cart-plus"></i> Add to Cart
+            </a>
+            <a href="javascript:void(0)" class="see-more-details-link" data-item='${JSON.stringify(item).replace(/'/g, "&apos;")}'>
+              <i class="fas fa-info-circle"></i> See More Details
+            </a>
+          `;
+
+          searchResultsContainer.appendChild(resultBox);
+        });
+      } else {
+        console.error('Invalid response format: "medicines" is missing or not an array');
+        searchResultsContainer.innerHTML = '<p>No results found.</p>';
+      }
+    })
+    .catch(error => {
+      console.error('Error fetching search results:', error);
+    });
+  } else if (query.length === 0) {
+    searchResultsContainer.innerHTML = '';
+  }
+});
+
+// Handle click events for "See More Details" and "Add to Cart"
+searchResultsContainer.addEventListener('click', function (event) {
+  if (event.target.classList.contains('see-more-details-link')) {
+    const itemData = event.target.getAttribute('data-item');
+    const item = JSON.parse(itemData);
+
+    sessionStorage.setItem("selectedItem", JSON.stringify(item));
+    sessionStorage.setItem("brand_name", item.brand_name);
+
+    window.location.href = "dynamic.html";
+  } else if (event.target.classList.contains('add-to-cart-link')) {
+    const productName = event.target.getAttribute('data-name');
+    const productPrice = 50; // Set price dynamically if needed
+    const quantity = 1; // Allow user to change quantity if needed
+
+    addToCart(productName, productPrice, quantity);
+  }
+});
+
+    
+    
+      </script>
+    </body>
+    </html>
+    

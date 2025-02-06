@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pharmacy Cure Connect</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+   body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(to right, #121212, #1e1e1e, #333333);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  transition: background 0.5s ease;
+}
+
+
+    .header {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .logo {
+      font-size: 32px;
+      font-weight: bold;
+      color: #00bfff;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      transition: transform 0.3s ease;
+    }
+
+    .logo:hover {
+      transform: scale(1.1);
+    }
+
+    .header-buttons {
+      display: flex;
+      gap: 20px;
+    }
+
+    .header-buttons a {
+      text-decoration: none;
+      background-color: royalblue;
+      border: none;
+      padding: 14px 20px;
+      border-radius: 15px;
+      color: #fff;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.2s, box-shadow 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .medicine-quantity {
+      background-color: #1a1a1a;
+      color: #fff;
+      border: 2px solid #00bfff;
+      padding: 8px 12px;
+      border-radius: 25px;
+      font-size: 16px;
+      width: 100px;
+      text-align: center;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .medicine-quantity:focus {
+      outline: none;
+      background-color: #333333;
+      box-shadow: 0 5px 20px rgba(0, 191, 255, 0.7);
+    }
+    
+    .medicine-quantity option {
+      background-color: #1a1a1a;
+      color: #fff;
+      border: none;
+      padding: 8px;
+    }
+    
+    .medicine-quantity option:hover {
+      background-color: #333333;
+    }
+
+    .header-buttons a:hover {
+      background-color: rgb(56, 90, 194);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .search-bar-container {
+      width: 100%;
+      max-width: 900px;
+      margin: 30px 0;
+      display: flex;
+      justify-content: center;
+      animation: slideIn 1s ease;
+    }
+
+    .search-bar {
+      display: flex;
+      flex: 1;
+      max-width: 700px;
+    }
+
+    .search-bar input {
+      flex: 1;
+      padding: 15px;
+      border: none;
+      border-radius: 25px 0 0 25px;
+      outline: none;
+      font-size: 16px;
+      box-shadow: 0 5px 15px rgba(0, 191, 255, 0.3);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .search-bar input:focus {
+      box-shadow: 0 5px 20px rgba(0, 191, 255, 0.7);
+    }
+
+    .search-bar button {
+      background-color: royalblue;
+      border: none;
+      padding: 15px 25px;
+      border-radius: 0 25px 25px 0;
+      color: #fff;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease, transform 0.2s, box-shadow 0.3s ease;
+    }
+
+    .search-bar button:hover {
+      background-color: rgb(56, 90, 194);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .medicine-list {
+      width: 100%;
+      max-width: 1200px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+      margin-top: 30px;
+      animation: fadeInUp 1s ease-in-out;
+    }
+
+    .medicine-card {
+      background-color: #1a1a1a;
+      color: #fff;
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s ease;
+    }
+
+    .medicine-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .medicine-card img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      margin-bottom: 20px;
+      border-radius: 50%;
+      transition: transform 0.3s ease;
+    }
+
+    .medicine-card img:hover {
+      transform: scale(1.1);
+    }
+
+    .medicine-card h3 {
+      font-size: 24px;
+      margin: 10px 0;
+      color: #00bfff;
+      text-transform: capitalize;
+    }
+
+    .medicine-card p {
+      font-size: 20px;
+      font-weight: bold;
+      color: royalblue;
+      margin-bottom: 25px;
+    }
+
+    .medicine-card a {
+      text-decoration: none;
+      background-color: royalblue;
+      color: #fff;
+      padding: 12px 26px;
+      border-radius: 15px;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background-color 0.3s ease, transform 0.2s, box-shadow 0.3s ease;
+    }
+
+    .medicine-card a:hover {
+      background-color: rgb(56, 90, 194);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-50%); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+ <div class="header">
+    <div class="logo">Cure Connect Pharma Store</div>
+    <div class="header-buttons">
+      <a href="#upload"><i class="fas fa-file-prescription"></i> Upload Prescription</a>
+      <a href="checkout.html"><i class="fas fa-shopping-cart"></i> Cart</a>
+      <a href="login.html"><i class="fas fa-user"></i> Login</a>
+    </div>
+  </div>
+
+  <div class="search-bar-container">
+    <div class="search-bar">
+      <input type="text" placeholder="Search for medicines...">
+      <button><i class="fas fa-search"></i> Search</button>
+    </div>
+  </div>
+
+  <div class="medicine-list">
+    <!-- Medicine 1 -->
+    <div class="medicine-card">
+      <img src="Paracetamol.png" alt="Medicine 1">
+      <h3>Paracetamol</h3>
+      <p>₹20</p>
+      <select class="medicine-quantity" data-name="Paracetamol" data-price="20">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+      <a href="javascript:void(0)" class="add-to-cart"><i class="fas fa-cart-plus"></i> Add to Cart</a>
+    </div>
+
+    <!-- Medicine 2 -->
+    <div class="medicine-card">
+      <img src="Ibu.png" alt="Medicine 2">
+      <h3>Ibuprofen</h3>
+      <p>₹40</p>
+      <select class="medicine-quantity" data-name="Ibuprofen" data-price="40">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+      <a href="javascript:void(0)" class="add-to-cart"><i class="fas fa-cart-plus"></i> Add to Cart</a>
+    </div>
+
+    <!-- Medicine 3 -->
+    <div class="medicine-card">
+      <img src="Amox.png" alt="Medicine 3">
+      <h3>Amoxicillin</h3>
+      <p>₹60</p>
+      <select class="medicine-quantity" data-name="Amoxicillin" data-price="60">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+      </select>
+      <a href="javascript:void(0)" class="add-to-cart"><i class="fas fa-cart-plus"></i> Add to Cart</a>
+    </div>
+  </div>
+
+  <script>
+    // Event Listener for Add to Cart buttons
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+      button.addEventListener('click', function() {
+        const card = this.closest('.medicine-card');
+        const productName = card.querySelector('.medicine-quantity').getAttribute('data-name');
+        const productPrice = card.querySelector('.medicine-quantity').getAttribute('data-price');
+        const quantity = card.querySelector('.medicine-quantity').value;
+        const user_id = '-OH81oNdCEDC1Bk39ILS';
+        const cartData = {
+          user_id: user_id,
+          name: productName,
+          price: productPrice,
+          quantity: quantity
+        };
+
+        // Send POST request to the backend
+        fetch('http://127.0.0.1:5000/boot/addcart', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(cartData)
+        })
+        .then(response => response.json())
+        .then(data => {
+          alert(data.message + ' Total Price: ₹' + data.total_price);
+        })
+        .catch(error => {
+          alert('Error: ' + error.message);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
+

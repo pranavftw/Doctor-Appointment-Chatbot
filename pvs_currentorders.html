@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Current Orders</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            padding: 20px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .nav-buttons button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+
+        .nav-buttons button:hover {
+            background-color: #0056b3;
+        }
+
+        .order-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .order-item {
+            background: #fff;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            border-radius: 5px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .dropdown-btn:hover {
+            background-color: #45a049;
+        }
+
+        .order-details {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .order-summary {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .order-summary th, .order-summary td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .order-summary th {
+            background-color: #f4f4f4;
+        }
+
+        .order-summary tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .expected-delivery {
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        .order-item button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .order-item button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation Buttons -->
+<div class="nav-buttons">
+    <button onclick="goToCart()">GO TO CART</button>
+    <button onclick="goToPharmacy()">GO TO PHARMACY</button>
+</div>
+
+<h2>Current Orders</h2>
+
+<div id="order-list" class="order-list">
+    <!-- Orders will be displayed here dynamically -->
+</div>
+
+<script>
+    const jwtToken = localStorage.getItem("jwtToken");
+    console.log("User Token: ", jwtToken);
+    //const userId = '-OH81oNdCEDC1Bk39ILS'; // Example user ID
+
+    // Navigate to Cart
+    function goToCart() {
+        window.location.href = "Z:/OVERALLLLL/viewcart.html"; // Update with your cart page URL
+    }
+
+    // Navigate to Pharmacy
+    function goToPharmacy() {
+        window.location.href = "Z:/OVERALLLLL/pharmacy.html"; // Update with your pharmacy page URL
+    }
+
+    // Fetch orders from the backend
+    async function fetchOrders() {
+        try {
+            const response = await fetch('http://127.0.0.1:5000/boot/getorders', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${jwtToken}`
+                },
+                //body: JSON.stringify({ user_id: userId })
+            });
+            console.log("AWAITING RESPONSE FROM getodersfunction");
+            const data = await response.json();
+            const orderListElement = document.getElementById('order-list');
+            console.log("DATA GOT",data);
+            if (data.orders && data.orders.length > 0) {
+                data.orders.forEach(order => {
+                    const orderItem = document.createElement('div');
+                    orderItem.classList.add('order-item');
+
+                    // Create order button (for dropdown)
+                    const dropdownBtn = document.createElement('button');
+                    dropdownBtn.classList.add('dropdown-btn');
+                    dropdownBtn.textContent = `Order #${order.orderId}`;
+                    orderItem.appendChild(dropdownBtn);
+
+                    // Create order details container
+                    const orderDetails = document.createElement('div');
+                    orderDetails.classList.add('order-details');
+
+                    // Delivery details
+                    const deliveryDetails = `
+                        <p><strong>Delivery Address 1:</strong> ${order.deliveryAddress1}</p>
+                        <p><strong>Delivery Address 2:</strong> ${order.deliveryAddress2}</p>
+                        <p><strong>Phone Number:</strong> ${order.phoneNumber}</p>
+                        <p><strong>Order Tracking Link:</strong> <a href="${order.orderTrackLink}" target="_blank">Track Your Order</a></p>
+                    `;
+                    orderDetails.innerHTML = deliveryDetails;
+
+                    // Order summary (products list)
+                    const orderSummary = `
+                        <h4>Order Summary</h4>
+                        <table class="order-summary">
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Quantity</th>
+                                    <th>Price (per item)</th>
+                                    <th>Total Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${order.products.map(product => `
+                                    <tr>
+                                        <td>${product.name}</td>
+                                        <td>${product.quantity}</td>
+                                        <td>₹${product.price.toFixed(2)}</td>
+                                        <td>₹${(product.price * product.quantity).toFixed(2)}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    `;
+
+                    // Calculate the total order payment
+                    let totalOrderPayment = 0;
+                    order.products.forEach(product => {
+                        totalOrderPayment += product.price * product.quantity;
+                    });
+
+                    // Append Order Summary and Total Payment to details
+                    orderDetails.innerHTML += orderSummary;
+                    orderDetails.innerHTML += `
+                        <p style="font-weight: bold; color: #333; margin-top: 10px;">
+                            Total Order Payment: ₹${totalOrderPayment.toFixed(2)}
+                        </p>
+                    `;
+
+                    // Expected delivery date (random date)
+                    const randomDeliveryDate = getRandomDeliveryDate();
+                    orderDetails.innerHTML += `
+                        <p class="expected-delivery"><strong>Expected Delivery:</strong> ${randomDeliveryDate}</p>
+                    `;
+
+                    // Append the details to the order item
+                    orderItem.appendChild(orderDetails);
+
+                    // Add event listener to toggle dropdown
+                    dropdownBtn.addEventListener('click', () => {
+                        orderDetails.style.display = orderDetails.style.display === 'none' ? 'block' : 'none';
+                    });
+
+                    // Append the order item to the order list
+                    orderListElement.appendChild(orderItem);
+                });
+            } else {
+                orderListElement.innerHTML = '<p>No orders found.</p>';
+            }
+        } catch (error) {
+            console.error('Error fetching orders:', error);
+        }
+    }
+
+    // Random expected delivery date generator
+    function getRandomDeliveryDate() {
+        const randomDays = Math.floor(Math.random() * 5) + 1; // Random number of days (1-5)
+        const randomHours = Math.floor(Math.random() * 12) + 9; // Random hour (9-20)
+        const randomMinutes = Math.floor(Math.random() * 60); // Random minute (0-59)
+
+        const expectedDate = new Date();
+        expectedDate.setDate(expectedDate.getDate() + randomDays);
+        expectedDate.setHours(randomHours, randomMinutes, 0, 0);
+
+        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+        return expectedDate.toLocaleString('en-IN', options);
+    }
+
+    // Call the function to fetch orders when the page loads
+    fetchOrders();
+</script>
+
+</body>
+</html>

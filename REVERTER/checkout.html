@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Page</title>
+    <style>
+        /* Same styles as before */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f9f9f9;
+        }
+        .checkout-container {
+            display: flex;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 800px;
+        }
+        .form-section, .summary-section {
+            padding: 20px;
+        }
+        .form-section {
+            flex: 2;
+        }
+        .summary-section {
+            flex: 1;
+            background: #f3f3f3;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .btn {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .order-summary {
+            font-size: 14px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .total-price {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="checkout-container">
+        <!-- Form Section -->
+        <div class="form-section">
+            <h2>Delivery Details</h2>
+            <form id="checkout-form">
+                <div class="form-group">
+                    <label for="delivery-name">Delivery Name</label>
+                    <input type="text" id="delivery-name" name="deliveryName" required>
+                </div>
+                <div class="form-group">
+                    <label for="delivery-address1">Delivery Address 1</label>
+                    <input type="text" id="delivery-address1" name="deliveryAddress1" required>
+                </div>
+                <div class="form-group">
+                    <label for="delivery-address2">Delivery Address 2</label>
+                    <input type="text" id="delivery-address2" name="deliveryAddress2">
+                </div>
+                <div class="form-group">
+                    <label for="delivery-email">Delivery Email</label>
+                    <input type="email" id="delivery-email" name="deliveryEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone-number">Phone Number</label>
+                    <input type="tel" id="phone-number" name="phoneNumber" required>
+                </div>
+                <button type="button" class="btn" id="make-payment">Make Payment</button>
+            </form>
+        </div>
+
+        <!-- Order Summary Section -->
+        <div class="summary-section">
+            <h3>Order Summary</h3>
+            <div id="order-summary" class="order-summary">Loading...</div>
+        </div>
+    </div>
+
+    <script>
+        const jwtToken = localStorage.getItem("jwtToken");
+
+        // Fetch order summary on page load
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchOrderSummary();
+        });
+
+        // Function to fetch order summary from the backend
+        async function fetchOrderSummary() {
+            try {
+                const response = await fetch('http://127.0.0.1:5000/boot/retrievecart', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({})
+                });
+                const data = await response.json();
+                const orderSummary = document.getElementById('order-summary');
+
+                if (data.cart_data && data.cart_data.length > 0) {
+                    let tableHtml = `
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Medicine Name</th>
+                                    <th>Quantity</th>
+                                    <th>Price (per item)</th>
+                                    <th>Total Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+                    let totalPrice = 0;
+
+                    // Store product details to send in the deliveryupdate request
+                    localStorage.setItem('cartData', JSON.stringify(data.cart_data));
+
+                    data.cart_data.forEach(item => {
+                        const itemTotalPrice = item.price * item.quantity;
+                        totalPrice += itemTotalPrice;
+                        tableHtml += `
+                            <tr>
+                                <td>${item.name}</td>
+                                <td>${item.quantity}</td>
+                                <td>₹${item.price.toFixed(2)}</td>
+                                <td>₹${itemTotalPrice.toFixed(2)}</td>
+                            </tr>`;
+                    });
+
+                    tableHtml += `</tbody></table>
+                        <div class="total-price">Total Price: ₹${totalPrice.toFixed(2)}</div>`;
+                    orderSummary.innerHTML = tableHtml;
+                } else {
+                    orderSummary.innerHTML = "No items in the cart.";
+                }
+            } catch (error) {
+                console.error("Error fetching order summary:", error);
+                document.getElementById('order-summary').textContent = "Failed to load order summary.";
+            }
+        }
+
+        // Handle Make Payment button click
+        document.getElementById('make-payment').addEventListener('click', async () => {
+            const cartData = JSON.parse(localStorage.getItem('cartData')) || [];
+            const formData = {
+                deliveryName: document.getElementById('delivery-name').value,
+                deliveryAddress1: document.getElementById('delivery-address1').value,
+                deliveryAddress2: document.getElementById('delivery-address2').value,
+                deliveryEmail: document.getElementById('delivery-email').value,
+                phoneNumber: document.getElementById('phone-number').value,
+                products: cartData,
+            };
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/boot/deliveryupdate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json',
+                    "Authorization": `Bearer ${jwtToken}` },
+                    body: JSON.stringify(formData)
+                });
+                const result = await response.json();
+                const orderId = result.orderId;
+
+                if (result.paymentStatus === "Successful Payment") {
+                    alert("Payment Successful!");
+                    // Store orderId in localStorage
+                    localStorage.setItem("orderId", orderId);
+                    window.location.href = "Z:/OVERALLLLL/ordersuccess.html";
+                    console.log("ORDER ID IS:",orderId);
+                } 
+            } catch (error) {
+                console.error("Error during payment:", error);
+                alert("Make Payment Again.");
+            }
+        });
+    </script>
+</body>
+</html>

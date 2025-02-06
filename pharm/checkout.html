@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - Cure Connect Pharma Store</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .checkout-container {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      max-width: 900px;
+      background-color: #1a1a1a;
+      color: #fff;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      margin-top: 30px;
+    }
+
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-width: 400px;
+      padding: 20px;
+      border-radius: 20px;
+      background-color: #1a1a1a;
+      color: #fff;
+    }
+
+    .form label {
+      position: relative;
+    }
+
+    .form label .input {
+      background-color: #333;
+      color: #fff;
+      width: 100%;
+      padding: 10px;
+      border: 1px solid rgba(105, 105, 105, 0.397);
+      border-radius: 10px;
+    }
+
+    .submit {
+      border: none;
+      padding: 10px;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 16px;
+      background-color: #00bfff;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .submit:hover {
+      background-color: #00bfff96;
+    }
+
+    .order-summary {
+      background-color: #333;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+      width: 100%;
+      max-width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .order-summary p {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .order-summary .total {
+      font-size: 20px;
+      font-weight: bold;
+      color: royalblue;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="checkout-container">
+    <div class="form">
+      <h2>Checkout</h2>
+
+      <form id="checkout-form">
+        <label for="name">Full Name
+          <input type="text" id="name" class="input" placeholder="Enter your full name" required>
+        </label>
+
+        <label for="address">Delivery Address
+          <input type="text" id="address" class="input" placeholder="Enter delivery address" required>
+        </label>
+
+        <label for="email">Email
+          <input type="email" id="email" class="input" placeholder="Enter your email" required>
+        </label>
+
+        <div>
+          <button class="submit" type="submit" id="credit-debit-payment">Pay with Credit/Debit</button>
+          <button class="submit" type="submit" id="paypal-payment">Pay with PayPal</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="order-summary">
+      <p>Order Summary</p>
+      <div>
+        <p>Item 1: Paracetamol</p>
+        <p>Item 2: Ibuprofen</p>
+        <p>Item 3: Amoxicillin</p>
+      </div>
+      <div class="total">
+        Total: ₹120
+      </div>
+    </div>
+  </div>
+</body>
+</html>

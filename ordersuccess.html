@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <title>Order Success</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+        }
+        .success-message {
+            text-align: center;
+            padding: 50px;
+            background: rgb(0, 0, 0);
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+            max-width: 500px;
+            width: 90%;
+        }
+        h1 {
+            color: #0288d1;
+            font-size: 35px;
+        }
+        .order-info {
+            margin: 20px 0;
+            font-size: 18px;
+            color: #ffffff;
+        }
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 12px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        .btn-primary {
+            background: linear-gradient(45deg, #0288d1, #26c6da);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #0277bd, #00acc1);
+        }
+        .btn-secondary {
+            background-color: #f5f5f5;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+        .track-link {
+            display: block;
+            margin-top: 15px;
+            font-size: 14px;
+            color: #0288d1;
+            text-decoration: none;
+        }
+        .track-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="success-message">
+        <h1><i class="fas fa-check-circle"></i> Order Placed Successfully!</h1>
+        <p class="order-info">Thank you for shopping with us. Your Order ID: <strong id="order-id"></strong></p>
+        <a href="https://www.delhivery.com/tracking" class="track-link"><i class="fas fa-search"></i> Track Your Order</a>
+        <div class="button-container">
+            <a href="Z:/OVERALLLLL/chatbot.html" class="btn btn-secondary"><i class="fas fa-comments"></i> Return to Chatbot</a>
+            <a href="Z:/OVERALLLLL/pharmacy.html" class="btn btn-secondary"><i class="fas fa-hospital"></i> Return to Pharmacy</a>
+            <a href="Z:/OVERALLLLL/viewcart.html" class="btn btn-secondary"><i class="fas fa-shopping-cart"></i> Return to Cart</a>
+            <a href="Z:/OVERALLLLL/pvs_currentorders.html" class="btn btn-primary"><i class="fas fa-scroll"></i> View Previous Orders</a>
+        </div>
+    </div>
+    </div>
+    <script>
+        // Get order ID from localStorage
+        const orderId = localStorage.getItem("orderId");
+        if (orderId) {
+            document.getElementById('order-id').textContent = orderId;
+            console.log("ORDER ID:", orderId);
+        }
+    </script>
+</body>
+</html>

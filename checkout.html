@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Page</title>
+</title>
+
+<style>
+  
+        /* Combined styles with updated colors */
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            font-family: Arial, sans-serif;
+        }
+
+        .checkout-container {
+            display: flex;
+            background: #1a1a1a;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 800px;
+            color: #fff;
+        }
+        .form-section, .summary-section {
+            padding: 20px;
+        }
+        .form-section {
+            flex: 2;
+        }
+        .summary-section {
+            flex: 1;
+            background: #333;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            background-color: #333;
+            color: #fff;
+            border: 1px solid rgba(105, 105, 105, 0.397);
+            border-radius: 4px;
+        }
+        .btn {
+            background-color: #00bfff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            outline: none;
+            transform: .3s ease;
+        }
+        .btn:hover {
+            background-color: #00bfff96;
+        }
+        .order-summary {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            color: #fff;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #00bfff;
+        }
+        .total-price {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        /* Additional styles from previous CSS */
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 400px;
+            width: 100%;
+            padding: 60px;
+            border-radius: 20px;
+            position: relative;
+            background-color: #1a1a1a;
+            color: #fff;
+            border: 1px solid #333;
+        }
+
+        .title {
+            font-size: 50px;
+            font-weight: 600;
+            letter-spacing: -1px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding-left: 30px;
+            padding-right: 50px;
+            color: #00bfff;
+        }
+
+        .title::before {
+            width: 18px;
+            height: 18px;
+        }
+
+        .title::after {
+            width: 18px;
+            height: 18px;
+            animation: pulse 1s linear infinite;
+        }
+
+        .title::before,
+        .title::after {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            left: 0px;
+            background-color: #00bfff;
+        }
+
+        .message, 
+        .signin {
+            font-size: 14.5px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .signin {
+            text-align: center;
+        }
+
+        .signin a:hover {
+            text-decoration: underline royalblue;
+        }
+
+        .signin a {
+            color: #00bfff;
+        }
+
+        .flex {
+            display: flex;
+            width: 100%;
+            gap: 6px;
+        }
+
+        .form label {
+            position: relative;
+        }
+
+        .form label .input {
+            background-color: #333;
+            color: #fff;
+            width: 100%;
+            padding: 20px 05px 05px 10px;
+            outline: 0;
+            border: 1px solid rgba(105, 105, 105, 0.397);
+            border-radius: 10px;
+        }
+
+        .form label .input + span {
+            color: rgba(255, 255, 255, 0.5);
+            position: absolute;
+            left: 10px;
+            top: 0px;
+            font-size: 0.9em;
+            cursor: text;
+            transition: 0.3s ease;
+        }
+
+        .form label .input:placeholder-shown + span {
+            top: 12.5px;
+            font-size: 0.9em;
+        }
+
+        .form label .input:focus + span,
+        .form label .input:valid + span {
+            color: #00bfff;
+            top: 0px;
+            font-size: 0.7em;
+            font-weight: 600;
+        }
+
+        .input {
+            font-size: medium;
+        }
+
+        .submit {
+            border: none;
+            outline: none;
+            padding: 10px;
+            width: 415px;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            transform: .3s ease;
+            background-color: #00bfff;
+        }
+
+        .submit:hover {
+            background-color: #00bfff96;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+
+        @keyframes pulse {
+            from {
+                transform: scale(2);
+                opacity: 1;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="checkout-container">
+        <!-- Form Section -->
+        <div class="form-section">
+            <h2>Delivery Details</h2>
+            <form id="checkout-form">
+                <div class="form-group">
+                    <label for="delivery-name">Delivery Name</label>
+                    <input type="text" id="delivery-name" name="deliveryName" required>
+                </div>
+                <div class="form-group">
+                    <label for="delivery-address1">Delivery Address 1</label>
+                    <input type="text" id="delivery-address1" name="deliveryAddress1" required>
+                </div>
+                <div class="form-group">
+                    <label for="delivery-address2">Delivery Address 2</label>
+                    <input type="text" id="delivery-address2" name="deliveryAddress2">
+                </div>
+                <div class="form-group">
+                    <label for="delivery-email">Delivery Email</label>
+                    <input type="email" id="delivery-email" name="deliveryEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone-number">Phone Number</label>
+                    <input type="tel" id="phone-number" name="phoneNumber" required>
+                </div>
+                <button type="button" class="btn" id="make-payment">Make Payment</button>
+            </form>
+        </div>
+
+        <!-- Order Summary Section -->
+        <div class="summary-section">
+            <h3>Order Summary</h3>
+            <div id="order-summary" class="order-summary">Loading...</div>
+        </div>
+    </div>
+
+    <script>
+        const jwtToken = localStorage.getItem("jwtToken");
+
+        // Fetch order summary on page load
+        document.addEventListener("DOMContentLoaded", () => {
+            fetchOrderSummary();
+        });
+
+        // Function to fetch order summary from the backend
+        async function fetchOrderSummary() {
+            try {
+                const response = await fetch('http://127.0.0.1:5000/boot/retrievecart', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        "Authorization": `Bearer ${jwtToken}`
+                    },
+                    body: JSON.stringify({})
+                });
+                const data = await response.json();
+                const orderSummary = document.getElementById('order-summary');
+
+                if (data.cart_data && data.cart_data.length > 0) {
+                    let tableHtml = `
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Medicine Name</th>
+                                    <th>Quantity</th>
+                                    <th>Price (per item)</th>
+                                    <th>Total Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+                    let totalPrice = 0;
+
+                    // Store product details to send in the deliveryupdate request
+                    localStorage.setItem('cartData', JSON.stringify(data.cart_data));
+
+                    data.cart_data.forEach(item => {
+                        const itemTotalPrice = item.price * item.quantity;
+                        totalPrice += itemTotalPrice;
+                        tableHtml += `
+                            <tr>
+                                <td>${item.name}</td>
+                                <td>${item.quantity}</td>
+                                <td>₹${item.price.toFixed(2)}</td>
+                                <td>₹${itemTotalPrice.toFixed(2)}</td>
+                            </tr>`;
+                    });
+
+                    tableHtml += `</tbody></table>
+                        <div class="total-price">Total Price: ₹${totalPrice.toFixed(2)}</div>`;
+                    orderSummary.innerHTML = tableHtml;
+                } else {
+                    orderSummary.innerHTML = "No items in the cart.";
+                }
+            } catch (error) {
+                console.error("Error fetching order summary:", error);
+                document.getElementById('order-summary').textContent = "Failed to load order summary.";
+            }
+        }
+
+        // Handle Make Payment button click
+        document.getElementById('make-payment').addEventListener('click', async () => {
+            const cartData = JSON.parse(localStorage.getItem('cartData')) || [];
+            const formData = {
+                deliveryName: document.getElementById('delivery-name').value,
+                deliveryAddress1: document.getElementById('delivery-address1').value,
+                deliveryAddress2: document.getElementById('delivery-address2').value,
+                deliveryEmail: document.getElementById('delivery-email').value,
+                phoneNumber: document.getElementById('phone-number').value,
+                products: cartData,
+            };
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/boot/deliveryupdate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json',
+                    "Authorization": `Bearer ${jwtToken}` },
+                    body: JSON.stringify(formData)
+                });
+                const result = await response.json();
+                const orderId = result.orderId;
+
+                if (result.paymentStatus === "Successful Payment") {
+                    alert("Payment Successful!");
+                    // Store orderId in localStorage
+                    localStorage.setItem("orderId", orderId);
+                    window.location.href = "Z:/OVERALLLLL/ordersuccess.html";
+                    console.log("ORDER ID IS:",orderId);
+                } 
+            } catch (error) {
+                console.error("Error during payment:", error);
+                alert("Make Payment Again.");
+            }
+        });
+    </script>
+</body>
+</html>

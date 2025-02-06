@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login/Sign Up</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            font-family: Arial, sans-serif;
+            color: #fff;
+        }
+
+        .form-container {
+            max-width: 450px; 
+            padding: 60px; 
+            border-radius: 20px;
+            background-color: #1a1a1a;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+            color: #fff;
+            border: 2px solid #333;
+        }
+
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            margin-top: 0px;
+            color: #00bfff;
+            font-size: 50px; 
+            font-weight: 600; 
+            letter-spacing: -1px; 
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding-left: 30px; 
+            padding-right: 50px; 
+        }
+
+        .form-container h2::before,
+        .form-container h2::after {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            left: 0px;
+            background-color: #00bfff;
+        }
+
+        .form-container h2::after {
+            animation: pulse 1s linear infinite;
+        }
+
+        @keyframes pulse {
+            from {
+                transform: scale(2);
+                opacity: 1;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 0;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid rgba(105, 105, 105, 0.5);
+            border-radius: 10px;
+            background-color: #333;
+            color: #fff;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        input:focus {
+            border-color: #00bfff;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            background-color: #00bfff;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #00bfff96;
+        }
+
+        button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+
+        .message {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .success {
+            color: #28a745;
+        }
+
+        .error {
+            color: #dc3545;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Sign Up/Login</h2>
+    <form id="auth-form">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" placeholder="Enter your name" required />
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="Enter your email" required />
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Enter your password" required />
+        </div>
+        <button type="button" id="submit-btn">Submit</button>
+        <button type="button" id="sign-in-btn" class="hidden">Sign In</button>
+    </form>
+    <div id="response-message" class="message"></div>
+</div>
+
+<script>
+    const authForm = document.getElementById("auth-form");
+    const nameField = document.getElementById("name");
+    const emailField = document.getElementById("email");
+    const passwordField = document.getElementById("password");
+    const responseMessage = document.getElementById("response-message");
+    const submitBtn = document.getElementById("submit-btn");
+    const signInBtn = document.getElementById("sign-in-btn");
+
+    const API_URL = "http://127.0.0.1:5000/boot/login";
+
+    submitBtn.addEventListener("click", () => {
+        const name = nameField.value.trim();
+        const email = emailField.value.trim();
+        const password = passwordField.value.trim();
+
+        if (!name || !email || !password) {
+            responseMessage.textContent = "All fields are required!";
+            responseMessage.classList.add("error");
+            return;
+        }
+        if (!email.includes('@') || !email.endsWith('.com')) {
+            console.log("Invalid email: '@' and '.com' are required.");
+            responseMessage.textContent = "Invalid email: '@' and '.com' are required.";
+            responseMessage.classList.add("error");
+        }
+        else
+        {
+        fetch(API_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ name, email, password })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                responseMessage.textContent = data.error;
+                responseMessage.classList.add("error");
+                responseMessage.classList.remove("success");
+            } else {
+                responseMessage.textContent = data.message;
+                responseMessage.classList.remove("error");
+                responseMessage.classList.add("success");
+
+                if (data.TOKEN) {
+                    localStorage.setItem("jwtToken", data.TOKEN);
+                    console.log("JWT Token stored:", data.TOKEN);
+                }
+
+                if (data.message.includes("User created successfully")) {
+                    responseMessage.textContent = "Redirecting to chatbot ...";
+                    setTimeout(() => {
+                        window.location.href = "chatbot.html"; // HOME PAGE WITH BUTONNS ************************************************** LINK THISSSSSS
+                    }, 2000);
+                }
+
+                if (data.message.includes("User email already exists")) {
+                    responseMessage.textContent = `${data.message} Click "Sign In" to continue.`;
+                    signInBtn.classList.remove("hidden");
+                }
+
+                nameField.value = "";
+                emailField.value = "";
+                passwordField.value = "";
+            }
+        })
+
+        .catch(error => {
+            console.error("Error:", error);
+            responseMessage.textContent = "An error occurred. Please try again.";
+            responseMessage.classList.add("error");
+        });
+    }});
+
+    signInBtn.addEventListener("click", () => {
+        responseMessage.textContent = "Redirecting to Sign In...";
+        responseMessage.classList.remove("error");
+        responseMessage.classList.add("success");
+
+        setTimeout(() => {
+            window.location.href = "signin.html";
+        }, 2000);
+    });
+</script>
+
+</body>
+</html>
