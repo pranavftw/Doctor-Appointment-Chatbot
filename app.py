@@ -1656,8 +1656,8 @@ def send_email22(patient_name,user_email,case_intent):
     print("email 2222 blockkk enteredddd")
     sender_email = user_email
     print(sender_email)# Your email address, MAKE IT DYNAMIC IN THE FUTURE
-    sender_password = "rkkj sghi ceck lzop"  # Your email password
-    doctor_email = "rohanbaiju210@gmail.com"
+    sender_password = ""  # Your email password
+    doctor_email = ""
     doctor_name ="Casualty"   # SMTP server configuration
     smtp_server = "smtp.gmail.com"
     smtp_port = 587  # Use 465 for SSL or 587 for TLS
