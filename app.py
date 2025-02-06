@@ -1437,8 +1437,8 @@ def chatbot():
 
 # Function to send email
 def send_email(patient_name, doctor_name, doctor_email, case_intent, room_link):
-    sender_email = "rohanbaiju210@gmail.com"  # Your email address, MAKE IT DYNAMIC IN THE FUTURE
-    sender_password = "rkkj sghi ceck lzop"  # Your email password
+    sender_email = ""  # Your email address, MAKE IT DYNAMIC IN THE FUTURE
+    sender_password = ""  # Your email password
     print("hereee nowwww")
     # SMTP server configuration
     smtp_server = "smtp.gmail.com"
@@ -1587,7 +1587,7 @@ def urgent_send_email():
 
         if not doctor_email and doctor_name == "URGENT CARE CASUALTY":
             doctor_name = "URGENT CARE CASUALTY"
-            doctor_email = "rohanbaiju210@gmail.com"
+            doctor_email = ""
         
         # Generate the Zoom meeting link
         print("before zoom")
